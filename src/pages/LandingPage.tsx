@@ -860,10 +860,21 @@ export const LandingPage = () => {
               textAlign: 'center',
             }}
           >
-            <Typography variant="body2" sx={{ color: '#64748b', fontSize: '0.9rem' }}>
-              © 2025 MediConnect. Desarrollado con{' '}
-              <Favorite sx={{ fontSize: 16, color: '#ef4444', verticalAlign: 'middle' }} /> para
-              el cuidado de tu salud.
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#64748b',
+                fontSize: '0.9rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 0.5,
+                flexWrap: 'wrap'
+              }}
+            >
+              <span>© 2025 MediConnect. Desarrollado con</span>
+              <Favorite sx={{ fontSize: 16, color: '#ef4444' }} />
+              <span>para el cuidado de tu salud.</span>
             </Typography>
           </Box>
         </Container>
