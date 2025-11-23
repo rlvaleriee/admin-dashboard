@@ -727,8 +727,8 @@ export const LandingPage = () => {
         sx={{
           position: 'relative',
           zIndex: 1,
-          backgroundColor: '#0f172a',
-          borderTop: '4px solid #0ea5e9',
+          backgroundColor: 'white',
+          borderTop: '3px solid #e0f2fe',
           py: 8,
         }}
       >
@@ -776,7 +776,7 @@ export const LandingPage = () => {
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#94a3b8',
+                  color: '#64748b',
                   maxWidth: 420,
                   lineHeight: 1.9,
                   fontSize: '0.95rem',
@@ -792,9 +792,9 @@ export const LandingPage = () => {
                   label="Certificado"
                   size="small"
                   sx={{
-                    backgroundColor: 'rgba(14, 165, 233, 0.15)',
-                    color: '#7dd3fc',
-                    border: '1px solid rgba(14, 165, 233, 0.3)',
+                    backgroundColor: '#e0f2fe',
+                    color: '#0369a1',
+                    border: '2px solid #0ea5e9',
                     fontWeight: 700,
                     '& .MuiChip-icon': {
                       color: '#0ea5e9',
@@ -806,9 +806,9 @@ export const LandingPage = () => {
                   label="Seguro"
                   size="small"
                   sx={{
-                    backgroundColor: 'rgba(20, 184, 166, 0.15)',
-                    color: '#5eead4',
-                    border: '1px solid rgba(20, 184, 166, 0.3)',
+                    backgroundColor: '#ccfbf1',
+                    color: '#0d9488',
+                    border: '2px solid #14b8a6',
                     fontWeight: 700,
                     '& .MuiChip-icon': {
                       color: '#14b8a6',
@@ -818,12 +818,12 @@ export const LandingPage = () => {
               </Stack>
             </Box>
             <Box sx={{ textAlign: { xs: 'left', md: 'right' } }}>
-              <Typography variant="h6" sx={{ color: '#e0f2fe', fontWeight: 800, mb: 3 }}>
+              <Typography variant="h6" sx={{ color: '#0f172a', fontWeight: 800, mb: 3 }}>
                 Acceso Administrativo
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ color: '#94a3b8', mb: 3, fontSize: '0.9rem', lineHeight: 1.7 }}
+                sx={{ color: '#64748b', mb: 3, fontSize: '0.9rem', lineHeight: 1.7 }}
               >
                 Portal exclusivo para administradores del sistema MediConnect
               </Typography>
@@ -855,7 +855,7 @@ export const LandingPage = () => {
           </Box>
           <Box
             sx={{
-              borderTop: '1px solid rgba(14, 165, 233, 0.2)',
+              borderTop: '2px solid #e0f2fe',
               pt: 5,
               textAlign: 'center',
             }}
