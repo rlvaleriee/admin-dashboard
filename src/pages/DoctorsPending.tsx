@@ -29,7 +29,6 @@ import {
   Email,
   Phone,
   LocationOn,
-  Badge as BadgeIcon,
   Cancel,
   CheckCircle,
 } from '@mui/icons-material';
