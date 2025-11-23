@@ -160,14 +160,17 @@ export const LandingPage = () => {
                   width: 50,
                   height: 50,
                   borderRadius: 2.5,
-                  background: 'linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 20px rgba(14, 165, 233, 0.3)',
+                  overflow: 'hidden',
                 }}
               >
-                <LocalHospital sx={{ fontSize: 28, color: 'white' }} />
+                <img
+                  src="/logo.png"
+                  alt="MediConnect Logo"
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                />
               </Box>
               <Typography
                 variant="h6"
@@ -745,14 +748,17 @@ export const LandingPage = () => {
                     width: 55,
                     height: 55,
                     borderRadius: 2.5,
-                    background: 'linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 6px 20px rgba(14, 165, 233, 0.4)',
+                    overflow: 'hidden',
                   }}
                 >
-                  <LocalHospital sx={{ fontSize: 32, color: 'white' }} />
+                  <img
+                    src="/logo.png"
+                    alt="MediConnect Logo"
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  />
                 </Box>
                 <Typography
                   variant="h4"
