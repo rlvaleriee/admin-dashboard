@@ -38,6 +38,15 @@ export const LandingPage = () => {
     }
   };
 
+  const handleDownloadApk = () => {
+    const link = document.createElement('a');
+    link.href = '/application-e29bdf8c-b11c-4e07-939b-04bd85007e47.apk';
+    link.download = 'MediConnect.apk';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const features = [
     {
       icon: <MedicalServices sx={{ fontSize: 35 }} />,
@@ -304,6 +313,7 @@ export const LandingPage = () => {
                 size="large"
                 startIcon={<Android />}
                 endIcon={<Download />}
+                onClick={handleDownloadApk}
                 sx={{
                   background: 'linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%)',
                   color: 'white',
@@ -667,6 +677,7 @@ export const LandingPage = () => {
                   variant="contained"
                   size="large"
                   startIcon={<Download />}
+                  onClick={handleDownloadApk}
                   sx={{
                     backgroundColor: 'white',
                     color: '#0369a1',
