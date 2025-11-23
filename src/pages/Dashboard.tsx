@@ -168,6 +168,17 @@ export const Dashboard = () => {
           {statCards.map((card, index) => (
             <Card
               key={index}
+              onClick={() => {
+                if (card.title === 'Médicos Verificados') {
+                  navigate('/users?role=doctor&verified=true');
+                } else if (card.title === 'Total Usuarios') {
+                  navigate('/users');
+                } else if (card.title === 'Total Médicos') {
+                  navigate('/users?role=doctor');
+                } else if (card.title === 'Médicos Pendientes') {
+                  navigate('/doctors-pending');
+                }
+              }}
               sx={{
                 backgroundColor: 'white',
                 border: '2px solid #e0f2fe',
@@ -177,6 +188,7 @@ export const Dashboard = () => {
                 overflow: 'hidden',
                 transition: 'all 0.3s ease',
                 boxShadow: '0 4px 20px rgba(14, 165, 233, 0.08)',
+                cursor: 'pointer',
                 '&:hover': {
                   transform: 'translateY(-8px)',
                   borderColor: card.color,
@@ -272,7 +284,6 @@ export const Dashboard = () => {
               {[
                 { text: 'Revisar médicos pendientes de verificación', icon: <Pending />, path: '/doctors-pending', color: '#f59e0b' },
                 { text: 'Gestionar usuarios del sistema', icon: <People />, path: '/users', color: '#0ea5e9' },
-                { text: 'Ver perfiles de médicos verificados', icon: <CheckCircle />, path: '/users', color: '#22c55e' },
               ].map((action, index) => (
                 <Box
                   key={index}

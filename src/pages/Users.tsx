@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -75,21 +76,36 @@ interface User {
 }
 
 export const Users = () => {
+  const [searchParams] = useSearchParams();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState('all');
+  const [roleFilter, setRoleFilter] = useState(searchParams.get('role') || 'all');
+  const [verifiedFilter, setVerifiedFilter] = useState(searchParams.get('verified') || 'all');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogType, setDialogType] = useState<'edit' | 'delete'>('edit');
+  const [editedRole, setEditedRole] = useState('');
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
     severity: 'success' as 'success' | 'error',
   });
+
+  useEffect(() => {
+    const role = searchParams.get('role');
+    const verified = searchParams.get('verified');
+
+    if (role) {
+      setRoleFilter(role);
+    }
+    if (verified) {
+      setVerifiedFilter(verified);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -128,9 +144,13 @@ export const Users = () => {
       result = result.filter((user) => user.role === roleFilter);
     }
 
+    if (verifiedFilter !== 'all') {
+      result = result.filter((user) => user.verified === (verifiedFilter === 'true'));
+    }
+
     setFilteredUsers(result);
     setPage(0);
-  }, [searchTerm, roleFilter, users]);
+  }, [searchTerm, roleFilter, verifiedFilter, users]);
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -145,9 +165,14 @@ export const Users = () => {
     setRoleFilter(event.target.value);
   };
 
+  const handleVerifiedFilterChange = (event: SelectChangeEvent) => {
+    setVerifiedFilter(event.target.value);
+  };
+
   const handleOpenDialog = (user: User, type: 'edit' | 'delete') => {
     setSelectedUser(user);
     setDialogType(type);
+    setEditedRole(user.role);
     setOpenDialog(true);
   };
 
@@ -180,6 +205,19 @@ export const Users = () => {
     } catch (error) {
       console.error('Error deleting user:', error);
       setSnackbar({ open: true, message: 'Error al eliminar usuario', severity: 'error' });
+    }
+  };
+
+  const handleUpdateRole = async () => {
+    if (!selectedUser) return;
+
+    try {
+      await updateDoc(doc(db, 'users', selectedUser.id), { role: editedRole });
+      setSnackbar({ open: true, message: 'Rol actualizado exitosamente', severity: 'success' });
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Error updating role:', error);
+      setSnackbar({ open: true, message: 'Error al actualizar rol', severity: 'error' });
     }
   };
 
@@ -329,6 +367,40 @@ export const Users = () => {
                 <MenuItem value="admin">Administrador</MenuItem>
                 <MenuItem value="doctor">Doctor</MenuItem>
                 <MenuItem value="patient">Paciente</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl
+              sx={{
+                minWidth: 200,
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#f8fafc',
+                  color: '#0f172a',
+                  '& fieldset': {
+                    borderColor: '#cbd5e1',
+                    borderWidth: 2,
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#0ea5e9',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#0ea5e9',
+                    borderWidth: 2,
+                  },
+                },
+                '& .MuiInputLabel-root': {
+                  color: '#64748b',
+                  fontWeight: 600,
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#0ea5e9',
+                },
+              }}
+            >
+              <InputLabel>Estado de Verificación</InputLabel>
+              <Select value={verifiedFilter} onChange={handleVerifiedFilterChange} label="Estado de Verificación">
+                <MenuItem value="all">Todos</MenuItem>
+                <MenuItem value="true">Verificados</MenuItem>
+                <MenuItem value="false">No Verificados</MenuItem>
               </Select>
             </FormControl>
           </Stack>
@@ -829,7 +901,7 @@ export const Users = () => {
             }}
           >
             <Typography variant="h5" sx={{ fontWeight: 800 }}>
-              {dialogType === 'delete' ? 'Confirmar Eliminación' : 'Detalles del Usuario'}
+              {dialogType === 'delete' ? 'Confirmar Eliminación' : 'Editar Usuario'}
             </Typography>
             <IconButton
               onClick={handleCloseDialog}
@@ -916,12 +988,31 @@ export const Users = () => {
                           </Box>
                         )}
                         <Box>
-                          <Typography variant="caption" sx={{ color: '#64748b' }}>
+                          <Typography variant="caption" sx={{ color: '#64748b', mb: 1, display: 'block' }}>
                             Rol
                           </Typography>
-                          <Typography variant="body1" sx={{ color: '#0f172a', fontWeight: 600 }}>
-                            {selectedUser.role}
-                          </Typography>
+                          <FormControl fullWidth size="small">
+                            <Select
+                              value={editedRole}
+                              onChange={(e) => setEditedRole(e.target.value)}
+                              sx={{
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: '#cbd5e1',
+                                  borderWidth: 2,
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: '#0ea5e9',
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: '#0ea5e9',
+                                },
+                              }}
+                            >
+                              <MenuItem value="admin">Administrador</MenuItem>
+                              <MenuItem value="doctor">Doctor</MenuItem>
+                              <MenuItem value="patient">Paciente</MenuItem>
+                            </Select>
+                          </FormControl>
                         </Box>
                       </Stack>
                     </Box>
@@ -996,7 +1087,7 @@ export const Users = () => {
             >
               Cancelar
             </Button>
-            {dialogType === 'delete' && (
+            {dialogType === 'delete' ? (
               <Button
                 onClick={handleDeleteUser}
                 variant="contained"
@@ -1012,6 +1103,24 @@ export const Users = () => {
                 }}
               >
                 Eliminar
+              </Button>
+            ) : (
+              <Button
+                onClick={handleUpdateRole}
+                variant="contained"
+                sx={{
+                  textTransform: 'none',
+                  fontWeight: 700,
+                  px: 4,
+                  background: 'linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%)',
+                  boxShadow: '0 4px 15px rgba(14, 165, 233, 0.3)',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #0284c7 0%, #0d9488 100%)',
+                    boxShadow: '0 6px 20px rgba(14, 165, 233, 0.5)',
+                  },
+                }}
+              >
+                Guardar Cambios
               </Button>
             )}
           </DialogActions>
