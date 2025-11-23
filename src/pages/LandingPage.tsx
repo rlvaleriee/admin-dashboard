@@ -38,13 +38,21 @@ export const LandingPage = () => {
     }
   };
 
-  const handleDownloadApk = () => {
-    const link = document.createElement('a');
-    link.href = '/application-692f04fd-b87b-4de6-a3a0-6795ead6c1a1.apk?v=' + new Date().getTime();
-    link.download = 'MediConnect.apk';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownloadApk = async () => {
+    try {
+      const response = await fetch('/application-692f04fd-b87b-4de6-a3a0-6795ead6c1a1.apk?v=' + new Date().getTime());
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'MediConnect.apk';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error al descargar el APK:', error);
+    }
   };
 
   const features = [
