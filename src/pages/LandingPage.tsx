@@ -40,7 +40,7 @@ export const LandingPage = () => {
 
   const handleDownloadApk = () => {
     const link = document.createElement('a');
-    link.href = '/application-e29bdf8c-b11c-4e07-939b-04bd85007e47.apk';
+    link.href = '/application-692f04fd-b87b-4de6-a3a0-6795ead6c1a1.apk?v=' + new Date().getTime();
     link.download = 'MediConnect.apk';
     document.body.appendChild(link);
     link.click();
