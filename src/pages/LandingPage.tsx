@@ -266,7 +266,7 @@ export const LandingPage = () => {
               }}
             >
               Acceso inmediato a profesionales de la salud. Agenda citas, consulta tu historial
-              médico y recibe atención de calidad desde cualquier lugar.
+              médico y recibe atención de calidad.
             </Typography>
 
             {/* Medical Benefits */}
@@ -290,16 +290,11 @@ export const LandingPage = () => {
                     px: 1.5,
                     fontSize: '0.95rem',
                     boxShadow: '0 2px 8px rgba(14, 165, 233, 0.1)',
+                    cursor: 'default',
                     '& .MuiChip-icon': {
                       color: '#0ea5e9',
                       fontSize: 22,
                     },
-                    '&:hover': {
-                      borderColor: '#0ea5e9',
-                      boxShadow: '0 4px 16px rgba(14, 165, 233, 0.2)',
-                      transform: 'translateY(-2px)',
-                    },
-                    transition: 'all 0.3s ease',
                   }}
                 />
               ))}
@@ -444,17 +439,7 @@ export const LandingPage = () => {
                   p: 4,
                   position: 'relative',
                   overflow: 'visible',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                   boxShadow: '0 4px 20px rgba(14, 165, 233, 0.08)',
-                  '&:hover': {
-                    transform: 'translateY(-12px)',
-                    borderColor: feature.color,
-                    boxShadow: `0 20px 60px ${feature.color}25`,
-                    '& .feature-icon': {
-                      transform: 'scale(1.15)',
-                      boxShadow: `0 12px 32px ${feature.color}45`,
-                    },
-                  },
                 }}
               >
                 <Box
