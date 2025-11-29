@@ -55,6 +55,7 @@ interface Doctor {
   address?: string;
   clinicAddress?: string;
   verified: boolean;
+  rejected?: boolean;
   cssp?: CSSPData;
   location?: LocationData;
   reviewStatus?: string;
@@ -83,10 +84,10 @@ export const DoctorsPending = () => {
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
-        const doctorsList = snapshot.docs.map((doc) => ({
+        const doctorsList = (snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        })) as Doctor[];
+        })) as Doctor[]).filter((doctor) => !doctor.rejected);
         setDoctors(doctorsList);
         setLoading(false);
       },
