@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -8,15 +9,10 @@ import {
   Button,
   Chip,
   CircularProgress,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Alert,
   Snackbar,
   Avatar,
   Stack,
-  IconButton,
 } from '@mui/material';
 import { collection, query, where, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebaseClient';
@@ -25,12 +21,11 @@ import {
   Verified,
   Person,
   LocalHospital,
-  Close,
   Email,
   Phone,
   LocationOn,
-  Cancel,
   CheckCircle,
+  OpenInNew,
 } from '@mui/icons-material';
 
 interface CSSPData {
@@ -64,10 +59,9 @@ interface Doctor {
 }
 
 export const DoctorsPending = () => {
+  const navigate = useNavigate();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
@@ -101,35 +95,13 @@ export const DoctorsPending = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleOpenDialog = (doctor: Doctor) => {
-    setSelectedDoctor(doctor);
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedDoctor(null);
-  };
-
   const verifyDoctor = async (id: string) => {
     try {
       await updateDoc(doc(db, 'users', id), { verified: true });
       setSnackbar({ open: true, message: 'Médico verificado exitosamente', severity: 'success' });
-      handleCloseDialog();
     } catch (error) {
       console.error('Error verifying doctor:', error);
       setSnackbar({ open: true, message: 'Error al verificar médico', severity: 'error' });
-    }
-  };
-
-  const rejectDoctor = async (id: string) => {
-    try {
-      await updateDoc(doc(db, 'users', id), { verified: false, rejected: true });
-      setSnackbar({ open: true, message: 'Solicitud rechazada', severity: 'success' });
-      handleCloseDialog();
-    } catch (error) {
-      console.error('Error rejecting doctor:', error);
-      setSnackbar({ open: true, message: 'Error al rechazar solicitud', severity: 'error' });
     }
   };
 
@@ -324,20 +296,21 @@ export const DoctorsPending = () => {
                   </Stack>
 
                   {/* Actions */}
-                  <Stack direction="row" spacing={1.5}>
+                  <Stack spacing={1.5}>
                     <Button
                       variant="outlined"
                       size="small"
                       fullWidth
-                      onClick={() => handleOpenDialog(doctor)}
+                      startIcon={<OpenInNew />}
+                      onClick={() => navigate(`/doctor/${doctor.id}`)}
                       sx={{
-                        borderColor: 'rgba(255, 255, 255, 0.2)',
-                        color: '#0f172a',
+                        borderColor: '#0ea5e9',
+                        color: '#0ea5e9',
                         textTransform: 'none',
                         fontWeight: 600,
                         '&:hover': {
-                          borderColor: '#0ea5e9',
-                          backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                          borderColor: '#0369a1',
+                          backgroundColor: 'rgba(14, 165, 233, 0.1)',
                         },
                       }}
                     >
@@ -367,183 +340,6 @@ export const DoctorsPending = () => {
             ))}
           </Box>
         )}
-
-        {/* Dialog de detalles */}
-        <Dialog
-          open={openDialog}
-          onClose={handleCloseDialog}
-          maxWidth="sm"
-          fullWidth
-          slotProps={{
-            paper: {
-              sx: {
-                backgroundColor: 'white',
-                backgroundImage: 'none',
-                borderRadius: 4,
-                border: '3px solid #e0f2fe',
-                boxShadow: '0 25px 80px rgba(14, 165, 233, 0.15)',
-              },
-            },
-          }}
-        >
-          <DialogTitle
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              color: '#0f172a',
-              pb: 2,
-            }}
-          >
-            <Typography variant="h5" sx={{ fontWeight: 800 }}>
-              Detalles del Médico
-            </Typography>
-            <IconButton
-              onClick={handleCloseDialog}
-              sx={{
-                color: '#64748b',
-                '&:hover': {
-                  backgroundColor: '#f0f9ff',
-                },
-              }}
-            >
-              <Close />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent dividers sx={{ borderColor: '#e0f2fe' }}>
-            {selectedDoctor && (
-              <Stack spacing={3}>
-                {/* Personal Info */}
-                <Box>
-                  <Typography variant="h6" sx={{ color: '#0ea5e9', fontWeight: 700, mb: 2 }}>
-                    Información Personal
-                  </Typography>
-                  <Stack spacing={1.5}>
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
-                        Nombre Completo
-                      </Typography>
-                      <Typography variant="body1" sx={{ color: '#0f172a', fontWeight: 600 }}>
-                        {selectedDoctor.name} {selectedDoctor.lastName}
-                      </Typography>
-                    </Box>
-                    {selectedDoctor.email && (
-                      <Box>
-                        <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
-                          Email
-                        </Typography>
-                        <Typography variant="body1" sx={{ color: '#0f172a', fontWeight: 600 }}>
-                          {selectedDoctor.email}
-                        </Typography>
-                      </Box>
-                    )}
-                    {selectedDoctor.phone && (
-                      <Box>
-                        <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
-                          Teléfono
-                        </Typography>
-                        <Typography variant="body1" sx={{ color: '#0f172a', fontWeight: 600 }}>
-                          {selectedDoctor.phone}
-                        </Typography>
-                      </Box>
-                    )}
-                    {selectedDoctor.address && (
-                      <Box>
-                        <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
-                          Dirección
-                        </Typography>
-                        <Typography variant="body1" sx={{ color: '#0f172a', fontWeight: 600 }}>
-                          {selectedDoctor.address}
-                        </Typography>
-                      </Box>
-                    )}
-                    {selectedDoctor.clinicAddress && (
-                      <Box>
-                        <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
-                          Dirección de Clínica
-                        </Typography>
-                        <Typography variant="body1" sx={{ color: '#0f172a', fontWeight: 600 }}>
-                          {selectedDoctor.clinicAddress}
-                        </Typography>
-                      </Box>
-                    )}
-                  </Stack>
-                </Box>
-
-                {/* Professional Info */}
-                {selectedDoctor.cssp && (
-                  <Box>
-                    <Typography variant="h6" sx={{ color: '#10b981', fontWeight: 700, mb: 2 }}>
-                      Información Profesional
-                    </Typography>
-                    <Stack spacing={1.5}>
-                      <Box>
-                        <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
-                          Profesión
-                        </Typography>
-                        <Typography variant="body1" sx={{ color: '#0f172a', fontWeight: 600 }}>
-                          {selectedDoctor.cssp.profession}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
-                          Junta
-                        </Typography>
-                        <Typography variant="body1" sx={{ color: '#0f172a', fontWeight: 600 }}>
-                          {selectedDoctor.cssp.board}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
-                          Número de Junta
-                        </Typography>
-                        <Typography variant="body1" sx={{ color: '#0f172a', fontWeight: 600 }}>
-                          {selectedDoctor.cssp.boardNumber}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Box>
-                )}
-              </Stack>
-            )}
-          </DialogContent>
-          <DialogActions sx={{ p: 3, gap: 1 }}>
-            <Button
-              onClick={() => selectedDoctor && rejectDoctor(selectedDoctor.id)}
-              startIcon={<Cancel />}
-              sx={{
-                color: '#0f172a',
-                textTransform: 'none',
-                fontWeight: 600,
-                px: 3,
-                backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                '&:hover': {
-                  backgroundColor: 'rgba(239, 68, 68, 0.25)',
-                },
-              }}
-            >
-              Rechazar
-            </Button>
-            <Button
-              onClick={() => selectedDoctor && verifyDoctor(selectedDoctor.id)}
-              variant="contained"
-              startIcon={<Verified />}
-              sx={{
-                textTransform: 'none',
-                fontWeight: 700,
-                px: 4,
-                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)',
-                '&:hover': {
-                  boxShadow: '0 6px 20px rgba(16, 185, 129, 0.5)',
-                },
-              }}
-            >
-              Verificar
-            </Button>
-          </DialogActions>
-        </Dialog>
 
         {/* Snackbar */}
         <Snackbar

@@ -5,6 +5,8 @@ import { Login } from './pages/Login';
 import { ResetPassword } from './pages/ResetPassword';
 import { Dashboard } from './pages/Dashboard';
 import { DoctorsPending } from './pages/DoctorsPending';
+import { DoctorsRejected } from './pages/DoctorsRejected';
+import { DoctorDetails } from './pages/DoctorDetails';
 import { Users } from './pages/Users';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
@@ -42,6 +44,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <DoctorsPending />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctors-rejected"
+            element={
+              <ProtectedRoute>
+                <DoctorsRejected />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctor/:id"
+            element={
+              <ProtectedRoute>
+                <DoctorDetails />
               </ProtectedRoute>
             }
           />

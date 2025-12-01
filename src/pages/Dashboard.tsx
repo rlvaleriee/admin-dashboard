@@ -66,7 +66,8 @@ export const Dashboard = () => {
         );
 
         const unsubscribe = onSnapshot(pendingQuery, (snapshot) => {
-          const pendingDoctors = snapshot.size;
+          // Filtrar los rechazados para contar solo los pendientes reales
+          const pendingDoctors = snapshot.docs.filter(doc => !doc.data().rejected).length;
           setStats({
             totalUsers,
             totalDoctors,

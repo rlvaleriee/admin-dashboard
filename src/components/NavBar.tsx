@@ -21,6 +21,7 @@ import {
   Dashboard as DashboardIcon,
   Group,
   PendingActions,
+  Cancel,
 } from '@mui/icons-material';
 
 export const NavBar = () => {
@@ -49,6 +50,7 @@ export const NavBar = () => {
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
     { label: 'Médicos Pendientes', path: '/doctors-pending', icon: <PendingActions /> },
+    { label: 'Médicos Rechazados', path: '/doctors-rejected', icon: <Cancel /> },
     { label: 'Usuarios', path: '/users', icon: <Group /> },
   ];
 

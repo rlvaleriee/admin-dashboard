@@ -69,6 +69,7 @@ interface User {
   clinicAddress?: string;
   role: string;
   verified?: boolean;
+  rejected?: boolean;
   cssp?: CSSPData;
   location?: LocationData;
   reviewStatus?: string;
@@ -131,6 +132,9 @@ export const Users = () => {
 
   useEffect(() => {
     let result = users;
+
+    // Filtrar médicos rechazados (no deben aparecer en esta lista)
+    result = result.filter((user) => !(user.role === 'doctor' && user.rejected));
 
     if (searchTerm) {
       result = result.filter(
